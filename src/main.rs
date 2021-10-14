@@ -1,3 +1,9 @@
+use minigrep::Config;
+use std::env;
+
 fn main() {
-    minigrep::run()
+    let args: Vec<String> = env::args().collect();
+    let config = Config::new(&args);
+
+    minigrep::run(config);
 }

@@ -1,15 +1,16 @@
-use std::{env, fs};
+mod config;
 
-pub fn run() {
-    let args: Vec<String> = env::args().collect();
+pub use config::Config;
+use std::fs;
 
-    let query = &args[1];
-    let filename = &args[2];
+pub fn run(config: Config) {
+    println!(
+        "Searching for: {}\nIn file: {}\n",
+        config.query, config.filename
+    );
 
-    println!("Searching for: {}\nIn file: {}\n", query, filename);
-
-    let contents = fs::read_to_string(filename)
-        .expect("Something went wrong reading the file");
+    let contents =
+        fs::read_to_string(config.filename).expect("Something went wrong reading the file");
 
     println!("With the context:\n{}", contents)
 }
