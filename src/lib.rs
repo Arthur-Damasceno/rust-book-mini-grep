@@ -1,7 +1,7 @@
 mod config;
 
-use std::{error::Error, fs};
 pub use config::Config;
+use std::{error::Error, fs};
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     println!(
