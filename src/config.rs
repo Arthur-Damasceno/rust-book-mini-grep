@@ -1,20 +1,25 @@
 use std::env;
 
 #[derive(Debug, PartialEq)]
-pub struct Config {
-    pub query: String,
-    pub filename: String,
+pub struct Config<'a> {
+    pub query: &'a str,
+    pub filename: &'a str,
     pub case_sensitive: bool,
 }
 
-impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &str> {
-        if args.len() != 3 {
-            return Err("Not enough arguments");
-        }
+impl<'a> Config<'a> {
+    pub fn new(args: &Vec<String>) -> Result<Config, &'static str> {
+        let mut args = args.iter();
 
-        let query = args[1].clone();
-        let filename = args[2].clone();
+        let query = match args.next() {
+            Some(query) => query,
+            None => return Err("Didn't get a query"),
+        };
+
+        let filename = match args.next() {
+            Some(filename) => filename,
+            None => return Err("Didn't get a filename"),
+        };
 
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
 
@@ -39,8 +44,8 @@ mod tests {
         ];
         let config = Config::new(&args).unwrap();
 
-        assert_eq!(config.query, args[1]);
-        assert_eq!(config.filename, args[2]);
+        assert_eq!(config.query, &args[1]);
+        assert_eq!(config.filename, &args[2]);
     }
 
     #[test]
